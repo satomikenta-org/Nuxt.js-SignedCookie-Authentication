@@ -2,6 +2,7 @@
   <div class="container">
     <div>LOGIN</div>
     <button @click="handleLogin">Login</button>
+    <button @click="$router.push('/private')">Go To Private</button>
   </div>
 </template>
 
@@ -12,10 +13,14 @@ export default {
   components: {
     Logo
   },
+  middleware: 'authenticate',
   methods: {
     async handleLogin() {
       try {
         await axios.post('/login', { email: 'satomi@gmail.com'});
+        // TODO: acctually we need to get email and exp and set below
+        this.$store.commit('setToken', 'satomi@gmail.com');
+        // this.$store.commit('setTokenExp', exp)
         this.$router.push('/private');
       } catch (ex) {
         console.log(ex);

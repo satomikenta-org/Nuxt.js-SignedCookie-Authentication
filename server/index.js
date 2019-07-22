@@ -23,18 +23,28 @@ async function start() {
   }
   app.use(express.json());
   app.use(cookieParser('MY_SECRET'));
+  
+  
   app.post('/login', (req, res) => {
     const { email } = req.body;
-    res.cookie('token', email, { signed: true, maxAge: 30000  }); // if set httpOnly: true, cannot access cookie from client js code. 
+    // We also need to add cookie exp attr (in case of cookie stolen by attacker) like below.
+    const info = {
+      email,
+      exp: new Date().getTime() + 30000
+    }; 
+    res.cookie('token', info, { signed: true, maxAge: 30000, httpOnly: true, sameSite: true });
     res.send('Login Success');
   });
 
   app.get('/admin', (req, res) => {
-    console.log("Req Cookie", req.signedCookies);
     if (!req.signedCookies.token) {
       res.sendStatus(403);
     } else {
-      res.send({ msg: `You are ${req.signedCookies.token}`});
+      // We also need to check cookie exp attr like below.
+      if (req.signedCookies.token.exp < new Date().getTime()) {
+        return res.sendStatus(403);
+      }
+      res.send({ msg: `You are ${req.signedCookies.token.email}`});
     }
   })
 
