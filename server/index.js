@@ -25,9 +25,8 @@ async function start() {
   app.use(cookieParser('MY_SECRET'));
   
   
-  app.post('/login', (req, res) => {
+  app.post('/api/login', (req, res) => {
     const { email } = req.body;
-    // We also need to add cookie exp attr (in case of cookie stolen by attacker) like below.
     const info = {
       email,
       exp: new Date().getTime() + 30000
@@ -36,7 +35,18 @@ async function start() {
     res.send('Login Success');
   });
 
-  app.get('/admin', (req, res) => {
+
+  app.get('/api/checkauth', (req, res) => {
+    if (!req.signedCookies.token) {
+      return res.send({ isLoggedIn: false });
+    } 
+    if (req.signedCookies.token.exp < new Date().getTime()) {
+      return res.send({ isLoggedIn: false });
+    }
+    res.send({ isLoggedIn: true, id: req.signedCookies.token.email });
+  });
+
+  app.get('/api/admin', (req, res) => {
     if (!req.signedCookies.token) {
       res.sendStatus(403);
     } else {
@@ -48,7 +58,7 @@ async function start() {
     }
   })
 
-  app.get('/logout', (req, res) => {
+  app.get('/api/logout', (req, res) => {
     res.clearCookie('token');
     res.send('success logout');
   })

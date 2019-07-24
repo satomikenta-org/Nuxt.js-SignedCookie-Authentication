@@ -10,9 +10,9 @@ const createStore = () => {
       setToken (state, payload) {
         state.token = payload
       },
-      // setTokenExp (state, payload) {
-      // state.tokenExp = payload;
-      //}
+      removeToken( state ) {
+        state.token = null
+      }
     },
   })
 }

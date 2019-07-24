@@ -1,16 +1,33 @@
+import axios from 'axios';
 
-export default function({ req, redirect, store} ) {
+export default function( { req, redirect, store } ) {
+
   if (process.server) {
     if (!req.signedCookies.token) {
       redirect('/');
       return;
     }
-    store.commit('setToken', req.signedCookies.token.email);
-    // store.commit('setTokenExp', req.signedCookies.token.email);
-  } else {
-    if (!store.state.token) { // TODO: need to check token exp. 
-      console.log("Not LoggedIn");
+
+    if (req.signedCookies.token.exp < new Date().getTime()) {
       redirect('/');
+      return;
     }
+
+    store.commit('setToken', req.signedCookies.token.email);
+  } else {
+    // client side
+    return axios.get('/api/checkauth')
+    .then( res => {
+      if (!res.data.isLoggedIn) {
+        store.commit('removeToken');
+        return redirect('/');
+      } 
+      store.commit('setToken', res.data.id);
+    })
+    .catch(err => {
+      console.log(err);
+      store.commit('removeToken');
+      redirect('/');
+    })
   } 
 }
