@@ -1,8 +1,25 @@
 <template>
   <div>
+    <button @click="handleLogout" v-if="token">LOGOUT</button>
     <nuxt />
   </div>
 </template>
+
+<script>
+import { mapState } from 'vuex';
+export default {
+  computed: {
+    ...mapState(["token"])
+  },
+  methods: {
+    async handleLogout() {
+      await this.$store.dispatch('logout', () => {
+        this.$router.push('/');
+      });
+    }
+  }
+}
+</script>
 
 <style>
 html {

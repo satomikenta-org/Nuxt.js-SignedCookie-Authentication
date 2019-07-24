@@ -3,35 +3,20 @@
     <div>LOGIN</div>
     <button @click="handleLogin" v-if="!token">Login</button>
     <button @click="$router.push('/private')">Go To Private</button>
-    <button @click="handleLogout" v-if="token">LOGOUT</button>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import { mapState } from 'vuex';
 export default {
-  middleware: 'authenticate',
   computed: {
     ...mapState(["token"])
   },
   methods: {
     async handleLogin() {
-      try {
-        await axios.post('/api/login', { email: 'satomi@gmail.com'});
-        this.$store.commit('setToken', 'satomi@gmail.com');
+      await this.$store.dispatch('login', () => {
         this.$router.push('/private');
-      } catch (ex) {
-        console.log(ex);
-      }
-    },
-    async handleLogout() {
-      try {
-        await axios.get('/api/logout');
-        this.$store.commit('removeToken');
-      } catch (ex) {
-        console.log(ex);
-      }
+      });
     }
   }
 }

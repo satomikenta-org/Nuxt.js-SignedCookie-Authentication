@@ -29,9 +29,9 @@ async function start() {
     const { email } = req.body;
     const info = {
       email,
-      exp: new Date().getTime() + 30000
+      exp: new Date().getTime() + 10000
     }; 
-    res.cookie('token', info, { signed: true, maxAge: 30000, httpOnly: true, sameSite: true });
+    res.cookie('token', info, { signed: true, maxAge: 10000, httpOnly: true, sameSite: true });
     res.send('Login Success');
   });
 

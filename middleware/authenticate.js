@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export default function( { req, redirect, store } ) {
-
   if (process.server) {
     if (!req.signedCookies.token) {
       redirect('/');
@@ -16,16 +15,16 @@ export default function( { req, redirect, store } ) {
     store.commit('setToken', req.signedCookies.token.email);
   } else {
     // client side
-    return axios.get('/api/checkauth')
+    return axios.get('/api/checkauth') // need to return promise
     .then( res => {
       if (!res.data.isLoggedIn) {
         store.commit('removeToken');
-        return redirect('/');
+        redirect('/');
+        return;
       } 
       store.commit('setToken', res.data.id);
     })
     .catch(err => {
-      console.log(err);
       store.commit('removeToken');
       redirect('/');
     })

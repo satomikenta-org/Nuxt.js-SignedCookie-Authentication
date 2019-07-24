@@ -9,9 +9,6 @@
 <script>
 export default {
   middleware: 'authenticate',
-  beforeMount() {
-    console.log(this.$store.state);
-  }
 }
 </script>
 
