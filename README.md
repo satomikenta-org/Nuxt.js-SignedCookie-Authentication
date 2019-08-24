@@ -1,22 +1,14 @@
 # auth-demo
+- Nuxt.js with SingedCookie Auth behind ALB.
 
-> My stupendous Nuxt.js project
+## Deployment Procedures
+- 1. $ npm run build
+- 2. $ pm2 start "npm run start"  
 
-## Build Setup
+## Notice in Production 
+- We need to specified server host (to '0.0.0.0') .
+- We need to change axios BASE_URL (not localhost) .
 
-``` bash
-# install dependencies
-$ npm run install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+### What I Learned
+- Multiple Nuxt.js App with SignedCookie Authentication behind ALB works well.
+  (Stateless and Scalable like JWT).
