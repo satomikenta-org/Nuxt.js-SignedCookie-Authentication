@@ -68,7 +68,7 @@ async function start() {
 
 
   // Listen the server
-  app.listen(port, host)
+  app.listen(port, '0.0.0.0') // Need To Change host when Prod. so I changed it to 0.0.0.0 
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true

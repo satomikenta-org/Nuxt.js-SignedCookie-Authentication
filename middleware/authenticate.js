@@ -15,7 +15,8 @@ export default function( { req, redirect, store } ) {
     store.commit('setToken', req.signedCookies.token.email);
   } else {
     // client side
-    return axios.get('/api/checkauth') // need to return promise
+    const baseURL = `${window.location.href}`;
+    return axios.get(`${baseURL}api/checkauth`) // need to return promise
     .then( res => {
       if (!res.data.isLoggedIn) {
         store.commit('removeToken');
